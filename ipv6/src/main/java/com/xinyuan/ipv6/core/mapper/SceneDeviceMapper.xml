@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinyuan.ipv6.core.mapper.SceneDeviceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xinyuan.ipv6.core.model.SceneDevice">
+        <id column="SD_ID" property="sdId"/>
+        <result column="ID" property="id"/>
+        <result column="IP" property="ip"/>
+        <result column="PORT" property="port"/>
+        <result column="NAME" property="name"/>
+        <result column="CLASSROOM_NUM" property="classroomNum"/>
+        <result column="DEVICE_TYPE" property="deviceType"/>
+        <result column="VALUE" property="value"/>
+        <result column="SCENE_ID" property="sceneId"/>
+        <result column="INFO" property="info"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID AS id, IP AS ip, PORT AS port, NAME AS name, DEVICE_TYPE AS deviceType, VALUE AS value, SCENE_ID AS sceneId, INDEX AS index, IS_ON AS isOn, MAX AS max, MIN AS min, HOT_OR_COOL AS hotOrCool, BUTTON AS button, OPERA_VALUE AS operaValue
+    </sql>
+    <select id="listSceneDevice" resultMap="BaseResultMap">
+        SELECT
+        SD.SD_ID,
+        SD.ID,
+        D.IP,
+        D.`PORT`,
+        D.`NAME`,
+        D.DEVICE_TYPE,
+        SD.`VALUE`,
+        SD.SCENE_ID,
+        D.CLASSROOM_NUM,
+        SD.INFO
+        FROM
+        IP_SCENE_DEVICE SD
+        LEFT JOIN IP_DEVICE D ON SD.ID = D.ID
+        WHERE SD.SCENE_ID=#{sceneId}
+        order by DEVICE_TYPE
+    </select>
+
+</mapper>

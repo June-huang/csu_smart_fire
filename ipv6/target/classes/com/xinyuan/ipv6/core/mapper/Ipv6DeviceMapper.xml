@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xinyuan.ipv6.core.mapper.Ipv6DeviceMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.xinyuan.ipv6.core.model.Ipv6Device">
+        <id column="ID" property="id"/>
+        <result column="IP" property="ip"/>
+        <result column="MAC" property="mac"/>
+        <result column="PORT" property="port"/>
+        <result column="NAME" property="name"/>
+        <result column="CLASSROOM_NUM" property="classroomNum"/>
+        <result column="DEVICE_TYPE_ID" property="deviceTypeId"/>
+        <result column="DEVICE_TITLE_ID" property="deviceTitleId"/>
+        <result column="SWITCH_NUM" property="switchNum"/>
+        <result column="SWITCH_NAME" property="switchName"/>
+        <result column="ENERGY_DEVICE_ID" property="energyDeviceId"/>
+        <result column="MODEL_ID" property="modelId"/>
+        <result column="DEVICE_TYPE" property="deviceType"/>
+        <association property="ipv6DeviceType" javaType="com.xinyuan.ipv6.core.model.Ipv6DeviceType">
+            <id column="T_ID" property="id"/>
+            <result column="T_NAME" property="name"/>
+            <result column="T_CODE" property="code"/>
+        </association>
+        <association property="energyDevice" javaType="com.xinyuan.ipv6.core.model.Ipv6Device">
+            <id column="E_ID" property="id"/>
+            <result column="E_NAME" property="name"/>
+        </association>
+        <collection property="deviceTitles" ofType="com.xinyuan.system.core.model.smartclass.DeviceTitle">
+            <id column="DT_ID" property="id"/>
+            <result column="DT_NAME" property="name"/>
+        </collection>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        ID AS id, IP AS ip, PORT AS port, NAME AS name, DEVICE_TYPE_ID AS deviceTypeId, SWITCH_NUM AS switchNum, SWITCH_NAME AS switchName
+    </sql>
+
+    <select id="queryPage" resultMap="BaseResultMap">
+		SELECT
+			d.*,
+			e.ID E_ID,
+			e.`NAME` E_NAME,
+			t.ID T_ID,
+			t.`NAME` T_NAME,
+			t.`CODE` T_CODE,
+			dt.ID DT_ID,
+			dt.`NAME` DT_NAME
+		FROM
+			IP_DEVICE d
+		LEFT JOIN IP_DEVICE e ON d.ENERGY_DEVICE_ID = e.ID
+		LEFT JOIN IP_DEVICE_TYPE t ON d.DEVICE_TYPE_ID = t.ID
+		LEFT JOIN SYS_DEVICE_TITLE dt ON FIND_IN_SET(dt.ID, d.DEVICE_TITLE_ID)
+		<where>
+            <if test="deviceType!=null">
+                d.DEVICE_TYPE = #{deviceType}
+            </if>
+        </where>
+	</select>
+	
+	<select id="queryPage2" resultMap="BaseResultMap">
+		SELECT
+			d.*,
+			e.ID E_ID,
+			e.`NAME` E_NAME,
+			t.ID T_ID,
+			t.`NAME` T_NAME,
+			t.`CODE` T_CODE,
+			dt.ID DT_ID,
+			dt.`NAME` DT_NAME
+		FROM
+			IP_DEVICE d
+		LEFT JOIN IP_DEVICE e ON d.ENERGY_DEVICE_ID = e.ID
+		LEFT JOIN IP_DEVICE_TYPE t ON d.DEVICE_TYPE_ID = t.ID
+		LEFT JOIN SYS_DEVICE_TITLE dt ON FIND_IN_SET(dt.ID, d.DEVICE_TITLE_ID)
+		<where>
+            <if test="CLASSROOM_NUM!=null">
+                d.CLASSROOM_NUM = #{CLASSROOM_NUM}
+            </if>
+        </where>
+	</select>
+	
+    <select id="queryKeyByDeviceIp" resultType="com.xinyuan.system.core.model.smartclass.DeviceControllerKey">
+        SELECT
+            k.ID id,
+            k.CMD cmd,
+            k.TYPE type,
+            k.`NAME` `name`
+        FROM
+            ip_device d
+        LEFT JOIN sys_device_controller_key k ON d.MODEL_ID = k.MODEL_ID
+        AND K.TYPE = #{type}
+        WHERE  d.IP = #{deviceIp}
+    </select>
+    <select id="queryEnergyDeviceByDeviceId" resultMap="BaseResultMap">
+        SELECT
+        E.*
+        FROM
+        IP_DEVICE D
+        INNER JOIN IP_DEVICE E ON D.ENERGY_DEVICE_ID = E.ID
+        WHERE
+        D.ID = #{deviceId}
+    </select>
+
+</mapper>

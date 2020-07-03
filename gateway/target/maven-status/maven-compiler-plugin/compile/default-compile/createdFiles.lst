@@ -1,0 +1,7 @@
+com\xinyuan\gateway\http\exception\GatewayException.class
+com\xinyuan\gateway\http\util\GatewayHttpUtils.class
+com\xinyuan\gateway\http\util\HttpDeleteWithBody.class
+com\xinyuan\gateway\http\data\DeviceData.class
+com\xinyuan\gateway\http\data\RoomData.class
+com\xinyuan\gateway\http\data\GatewayData.class
+com\xinyuan\gateway\http\data\GatewayResult.class

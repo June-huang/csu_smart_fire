@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: xinyuan-gateway
+Implementation-Version: 1.0.0
+Built-By: tanweijun
+Implementation-Vendor-Id: com.xinyuan
+Build-Jdk: 1.8.0_112
+Implementation-URL: http://maven.apache.org/xinyuan-gateway
+Created-By: Maven Integration for Eclipse
+Implementation-Vendor: Pivotal Software, Inc.
+
